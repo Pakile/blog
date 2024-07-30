@@ -83,4 +83,52 @@ const userProfile = async (req, res, next) => {
   }
 };
 
-export {registerUser, loginUser, userProfile}
+const updateProfile = async (req, res, next) => {
+  try {
+    const userIdToUpdate = req.params.userId;
+
+    let userId = req.user._id.toString();
+
+    console.log('userId', userId, userIdToUpdate)
+
+    if (!req.user.admin && userId !== userIdToUpdate) {
+      let error = new Error("Forbidden resource");
+      error.statusCode = 403;
+      throw error;
+    }
+
+    let user = await User.findById(userIdToUpdate);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    if (typeof req.body.admin !== "undefined" && req.user.admin) {
+      user.admin = req.body.admin;
+    }
+
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    if (req.body.password && req.body.password.length < 6) {
+      throw new Error("Password length must be at least 6 character");
+    } else if (req.body.password) {
+      user.password = req.body.password;
+    }
+
+    const updatedUserProfile = await user.save();
+
+    res.json({
+      _id: updatedUserProfile._id,
+      avatar: updatedUserProfile.avatar,
+      name: updatedUserProfile.name,
+      email: updatedUserProfile.email,
+      verified: updatedUserProfile.verified,
+      admin: updatedUserProfile.admin,
+      token: await updatedUserProfile.generateJWT(),
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export {registerUser, loginUser, userProfile, updateProfile}
