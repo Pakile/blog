@@ -1,0 +1,16 @@
+{
+  "name": "backend-blog",
+  "version": "1.0.0",
+  "main": "server.js",
+  "author": "Phuong",
+  "license": "ISC",
+  "scripts": {
+    "start": "node -r esm server.js",
+    "dev": "nodemon -r esm server.js"
+  },
+  "dependencies": {
+    "esm": "^3.2.25",
+    "express": "^4.19.2",
+    "mongoose": "^8.5.1"
+  }
+}
