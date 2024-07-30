@@ -35,13 +35,14 @@ const updatePost = async (req, res, next) => {
       return;
     }
 
-    const {title, caption, slug, body, tags} = JSON.parse(req.body.document);
+    const {title, caption, slug, body, tags, categories} = JSON.parse(req.body.document);
 
     post.title = title || post.title;
     post.caption = caption || post.caption;
     post.slug = slug || post.slug;
     post.body = body || post.body;
     post.tags = tags || post.tags;
+    post.categories = categories || post.categories;
 
     const updatedPost = await post.save();
     return res.json(updatedPost);
@@ -57,7 +58,11 @@ const getPost = async (req, res, next) => {
       {
         path: "user",
         select: ["avatar", "name"],
-      }
+      },
+      {
+        path: "categories",
+        select: ["title"],
+      },
     ]);
 
     if (!post) {
