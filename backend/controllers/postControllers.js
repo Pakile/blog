@@ -1,5 +1,6 @@
 import Post from "../models/Post";
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
+import Comment from "../models/Comment";
 
 const createPost = async (req, res, next) => {
   try {
@@ -63,6 +64,18 @@ const getPost = async (req, res, next) => {
         path: "categories",
         select: ["title"],
       },
+      {
+        path: "comments",
+        match: {
+          check: true,
+        },
+        populate: [
+          {
+            path: "user",
+            select: ["avatar", "name"],
+          }
+        ],
+      },
     ]);
 
     if (!post) {
@@ -84,6 +97,8 @@ const deletePost = async (req, res, next) => {
       const error = new Error("Post was not found");
       return next(error);
     }
+
+    await Comment.deleteMany({post: post._id});
 
     return res.json({
       message: "Post is successfully deleted",

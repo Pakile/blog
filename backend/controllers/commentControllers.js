@@ -11,6 +11,7 @@ const createComment = async (req, res, next) => {
       const error = new Error("Post was not found!");
       return next(error);
     }
+
     const newComment = new Comment({
       user: req.user._id,
       desc,
@@ -24,9 +25,11 @@ const createComment = async (req, res, next) => {
     next(error)
   }
 }
+
 const updateComment = async (req, res, next) => {
   try {
     const {desc, check} = req.body;
+
     const comment = await Comment.findById(req.params.commentId);
 
     if (!comment) {
@@ -37,7 +40,7 @@ const updateComment = async (req, res, next) => {
     comment.desc = desc || comment.desc;
     comment.check = check || comment.check;
 
-    const commentUpdated = comment.save();
+    const commentUpdated = await comment.save();
 
     return res.json(commentUpdated);
   } catch (error) {

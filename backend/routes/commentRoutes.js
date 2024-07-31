@@ -5,7 +5,7 @@ import {createComment, deleteComment, updateComment} from "../controllers/commen
 const router = Router();
 
 router
-  .route("/")
+  .route("/create")
   .post(authGuard, createComment)
 
 router
