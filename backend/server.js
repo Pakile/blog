@@ -7,6 +7,7 @@ import {errorResponserHandler, invalidPathHandler} from "./middleware/errorHandl
 import userRoutes from "./routes/userRoutes";
 import postRoutes from "./routes/postRoutes";
 import postCategoryRoutes from "./routes/postCategoryRoutes";
+import commentRoutes from "./routes/commentRoutes";
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.get("/", (req, res) => {
 app.use("/api/users", userRoutes)
 app.use("/api/posts", postRoutes)
 app.use("/api/categories", postCategoryRoutes);
+app.use("/api/comments", commentRoutes);
 
 
 app.use(invalidPathHandler);
